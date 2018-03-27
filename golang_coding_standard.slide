@@ -24,16 +24,15 @@ http://hxzqlh.com
 
 * Formatting
 
-- Tab
-- {
-- ;
+- Tab indent
+- No ;
 
  type T struct {
     name string // name of the object
     value int // its value
  }
 
-*gofmt* to:
+use *gofmt* cmd:
 
  type T struct {
      name  string // name of the object
@@ -48,11 +47,7 @@ http://hxzqlh.com
 
 * import
 
-建议采用如下顺序组织包：
-
-- 标准库包
-- 程序内部包
-- 第三方包
+建议采用如下顺序组织包：标准库包，程序内部包，第三方包
 
  import (
     "encoding/json"
@@ -67,7 +62,7 @@ http://hxzqlh.com
 
 - Not suggested
  import "../net"
- import .
+ import . "/path/of/foo"
 
 * Commantory
 
@@ -108,13 +103,13 @@ http://hxzqlh.com
 
 - *驼峰命名法* 
 - 全局变量：*大写* 字母开头，GlobalName
-- 仅限在包内的全局变量，包外引用需要写接口，提供调用 
+- 仅限在包内的全局变量，包外引用需要通过方法调用 
 - 局部变量：*小写* 字母开头, localName
 
 * Constants
 
 - *大写* 字母开头
-- iota
+- 巧用 iota
 
  const Pi = 3.14
  const World = "世界"
@@ -136,13 +131,13 @@ http://hxzqlh.com
 * Function
 
 - 函数名采用 *驼峰命名法* ，尽量不要使用下划线
-- 公有方法名首字母大写，私有方法名首字母小写
-- 接收者名称一般采用strcut的第一个字母且为小写，而不是 *this*， *me* 或者 *self*
+- 包方法名首字母大写，内部方法名首字母小写
+- 接收者名称：strcut的第一个字母且为小写，而不是 *this*， *me* 或者 *self*
 
   type T struct{} 
-  func (p *T)Get(){}
+  func (t *T)Get(){}
 
-- 如果接收者是map,slice或者chan，不要用指针传递
+- 如果接收者是 map,slice或者chan，不要用指针传递
  
  type mp map[string]string
  func (m mp) Set(k, v string) {
@@ -153,10 +148,10 @@ http://hxzqlh.com
 
 在循环中调用函数或者goroutine方法，一定要采用显示的变量调用，不要在闭包函数里面调用循环的参数
 
- fori:=0;i<limit;i++{
-    go func(){ DoSomething(i) }() //错误的做法
-    go func(i int){ DoSomething(i) }(i)//正确的做法
-￼ }
+ for i:=0; i<limit; i++ {
+    go func(){DoSomething(i)}() //wrong way
+    go func(i int){DoSomething(i)}(i) //correct way
+ }
 
 .link http://golang.org/doc/articles/race_detector.html#Race_on_loop_counter Race_on_loop_counter
 
@@ -346,8 +341,24 @@ then
 
 * panic
 
+- Don't abuse panic.
 - Don't use panic for normal error handling. 
 - Use error and multiple return values.
+
+* recover
+
+- Don't abuse recover.
+- Put it where something unexpected happen.
+
+ func safelyDo(work *Work) {
+    defer func() {
+        if err := recover(); err != nil {
+            log.Println("work failed:", err)
+        }
+    }()
+    // do may come across sth unexpected...
+    do(work)
+ }
 
 
 * Links
