@@ -78,7 +78,7 @@ use *gofmt* cmd:
 
 * Interface
 
-单个函数的接口名以”er”作为后缀，如Reader,Writer,接口的实现则去掉“er”
+单个函数的接口名以 ”er” 作为后缀，如 Reader,Writer,接口的实现则去掉 “er”
 
  type Reader interface {
     Read(p []byte) (n int, err error)
@@ -132,7 +132,7 @@ use *gofmt* cmd:
 
 - 函数名采用 *驼峰命名法* ，尽量不要使用下划线
 - 包方法名首字母大写，内部方法名首字母小写
-- 接收者名称：strcut的第一个字母且为小写，而不是 *this*， *me* 或者 *self*
+- 接收者名称：struct的第一个字母且为小写，而不是 *this*， *me* 或者 *self*
 
   type T struct{} 
   func (t *T)Get(){}
@@ -144,7 +144,7 @@ use *gofmt* cmd:
     m[k] = v
  }
 
-* Clusure
+* Closure
 
 在循环中调用函数或者goroutine方法，一定要采用显示的变量调用，不要在闭包函数里面调用循环的参数
 
@@ -359,7 +359,6 @@ then
     // do may come across sth unexpected...
     do(work)
  }
-
 
 * Links
 
