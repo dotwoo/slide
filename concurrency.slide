@@ -2,41 +2,16 @@
 
 Go Concurrency Patterns
 
-Rob Pike
-Google
-http://golang.org/s/plusrob
-@rob_pike
-http://golang.org
+Huang_Xuezhong
+33.cn
+hxz@disanbo.com
+http://hxzqlh.com
 
 * Video
 
-This talk was presented at Google I/O in June 2012.
+Original talk at Google I/O in June 2012.
 
-.link http://www.youtube.com/watch?v=f6kdp27TYZs Watch the talk on YouTube
-
-* Introduction
-
-* Concurrency features in Go
-
-People seemed fascinated by the concurrency features of Go when the language was first announced.
-
-Questions:
-
-- Why is concurrency supported?
-- What is concurrency, anyway?
-- Where does the idea come from?
-- What is it good for?
-- How do I use it?
-
-* Why?
-
-Look around you. What do you see?
-
-Do you see a single-stepping world doing one thing at a time?
-
-Or do you see a complex world of interacting, independently behaving pieces?
-
-That's why. Sequential processing on its own does not model the world's behavior.
+.link http://www.youtube.com/watch?v=f6kdp27TYZs 
 
 * What is concurrency?
 
@@ -52,9 +27,9 @@ Concurrency is not parallelism, although it enables parallelism.
 
 If you have only one processor, your program can still be concurrent  but it cannot be parallel.
 
-On the other hand, a well-written concurrent program might run efficiently in parallel on a multiprocessor. That property could be important...
+On the other hand, a well-written concurrent program might run efficiently in parallel on a multiprocessor. 
 
-For more on that distinction, see the link below. Too much to discuss here.
+For more on that distinction:
 
 .link http://golang.org/s/concurrency-is-not-parallelism
 
@@ -68,32 +43,7 @@ Easy to reason about.
 
 You don't need to be an expert!
 
-(Much nicer than dealing with the minutiae of parallelism (threads, semaphores, locks, barriers, etc.))
-
-* History
-
-To many, the concurrency features of Go seemed new.
-
-But they are rooted in a long history, reaching back to Hoare's CSP in 1978 and even Dijkstra's guarded commands (1975).
-
-Languages with similar features:
-
-- Occam (May, 1983)
-- Erlang (Armstrong, 1986)
-- Newsqueak (Pike, 1988)
-- Concurrent ML (Reppy, 1993)
-- Alef (Winterbottom, 1995)
-- Limbo (Dorward, Pike, Winterbottom, 1996).
-
-* Distinction
-
-Go is the latest on the Newsqueak-Alef-Limbo branch, distinguished by first-class channels.
-
-Erlang is closer to the original CSP, where you communicate to a process by name rather than over a channel.
-
-The models are equivalent but express things differently.
-
-Rough analogy: writing to a file by name (process, Erlang) vs. writing to a file descriptor (channel, Go).
+Much nicer than dealing with the minutiae of parallelism (threads, semaphores, locks, barriers)
 
 * Basic Examples
 
@@ -137,23 +87,23 @@ We can hang around a little, and on the way show that both main and the launched
 
 * Goroutines
 
-What is a goroutine? It's an independently executing function, launched by a go statement.
+- An independently executing function, launched by a *go* statement.
 
-It has its own call stack, which grows and shrinks as required.
+- It has its own call stack, which grows and shrinks as required.
 
-It's very cheap. It's practical to have thousands, even hundreds of thousands of goroutines.
+- It's very cheap. It's practical to have thousands, even hundreds of thousands of goroutines.
 
-It's not a thread.
+- It's not a thread.
 
 There might be only one thread in a program with thousands of goroutines.
 
-Instead, goroutines are multiplexed dynamically onto threads as needed to keep all the goroutines running.
-
-But if you think of it as a very cheap thread, you won't be far off.
+Instead, goroutines are *multiplexed* dynamically onto threads as needed to keep all the goroutines running.
 
 * Communication
 
-Our boring examples cheated: the main function couldn't see the output from the other goroutine.
+Our boring examples cheated: 
+
+ the main function couldn't see the output from the other goroutine.
 
 It was just printed to the screen, where we pretended we saw a conversation.
 
@@ -184,21 +134,11 @@ A sender and receiver must both be ready to play their part in the communication
 
 Thus channels both communicate and synchronize.
 
-* An aside about buffered channels
-
-Note for experts: Go channels can also be created with a buffer.
-
-Buffering removes synchronization.
-
-Buffering makes them more like Erlang's mailboxes.
-
-Buffered channels can be important for some problems but they are more subtle to reason about.
-
-We won't need them today.
-
 * The Go approach
 
-Don't communicate by sharing memory, share memory by communicating.
+Don't communicate by sharing memory
+
+.link https://blog.golang.org/share-memory-by-communicating Share memory by communicating 
 
 * "Patterns"
 
@@ -249,14 +189,9 @@ Each speaker must wait for a go-ahead.
 
 * Select
 
-A control structure unique to concurrency.
-
-The reason channels and goroutines are built into the language.
-
-* Select
-
 The select statement provides another way to handle multiple channels.
 It's like a switch, but each case is a communication:
+
 - All channels are evaluated.
 - Selection blocks until one communication can proceed, which then does.
 - If multiple can proceed, select chooses pseudo-randomly.
@@ -278,7 +213,7 @@ Rewrite our original fanIn function. Only one goroutine is needed. New:
 
 * Timeout using select
 
-The time.After function returns a channel that blocks for the specified duration.
+The *time.After* function returns a channel that blocks for the specified duration.
 After the interval, the channel delivers the current time, once.
 
 .play concurrency/support/timeout.go /START1/,/STOP1/
@@ -400,25 +335,6 @@ program into one that is
 - replicated
 - robust.
 
-* More party tricks
-
-There are endless ways to use these tools, many presented elsewhere.
-
-Chatroulette toy:
-
-.link http://golang.org/s/chat-roulette
-
-Load balancer:
-
-.link http://golang.org/s/load-balancer
-
-Concurrent prime sieve:
-
-.link http://golang.org/s/prime-sieve
-
-Concurrent power series (by McIlroy):
-
-.link http://golang.org/s/power-series
 
 * Don't overdo it
 
@@ -444,26 +360,3 @@ Goroutines and channels make it easy to express complex operations dealing with
 - failure
 
 And they're fun to use.
-
-
-* Links
-
-Go Home Page:
-
-.link http://golang.org
-
-Go Tour (learn Go in your browser)
-
-.link http://tour.golang.org
-
-Package documentation:
-
-.link http://golang.org/pkg
-
-Articles galore:
-
-.link http://golang.org/doc
-
-Concurrency is not parallelism:
-
-.link http://golang.org/s/concurrency-is-not-parallelism
